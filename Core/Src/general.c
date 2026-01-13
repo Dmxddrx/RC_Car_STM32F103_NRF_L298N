@@ -60,7 +60,7 @@ void General_Run(int16_t angle, uint8_t speed)
             Motor_SetSpeed(MOTOR_LEFT_BOTTOM, 0);
             Motor_SetSpeed(MOTOR_RIGHT_TOP, 0);
             break;
-        case 135:
+        case 315:
             Motor_SetDirection(MOTOR_LEFT_TOP, MOTOR_STOP);
             Motor_SetDirection(MOTOR_LEFT_BOTTOM, MOTOR_FORWARD);
             Motor_SetDirection(MOTOR_RIGHT_TOP, MOTOR_FORWARD);
@@ -71,7 +71,7 @@ void General_Run(int16_t angle, uint8_t speed)
             Motor_SetSpeed(MOTOR_LEFT_TOP, 0);
             Motor_SetSpeed(MOTOR_RIGHT_BOTTOM, 0);
             break;
-        case 315:   // -135deg equivalent
+        case 135:   // -135deg equivalent
             Motor_SetDirection(MOTOR_LEFT_TOP, MOTOR_STOP);
             Motor_SetDirection(MOTOR_LEFT_BOTTOM, MOTOR_BACKWARD);
             Motor_SetDirection(MOTOR_RIGHT_TOP, MOTOR_BACKWARD);
@@ -93,7 +93,7 @@ void General_Run(int16_t angle, uint8_t speed)
 // Stop all motors
 void Robot_Stop(void)
 {
-    //Motor_MoveAll(MOTOR_STOP, 0);
-	Motor_MoveAll(MOTOR_BACKWARD, 50);
+    Motor_MoveAll(MOTOR_STOP, 0);
+	//Motor_MoveAll(MOTOR_BACKWARD, 50);
 
 }
