@@ -26,6 +26,14 @@ Motor_PinDef motors[4] = {
     {GPIOB, GPIO_PIN_14, GPIOB, GPIO_PIN_15, &htim1, TIM_CHANNEL_4}    // ENB - A9  (TIM1 CH4)
 };
 
+// ✅ Direction correction table (ADD THIS HERE)
+static const int8_t motor_dir_sign[4] = {
+    -1, // MOTOR_LEFT_TOP
+    -1, // MOTOR_LEFT_BOTTOM
+     1, // MOTOR_RIGHT_TOP
+     1  // MOTOR_RIGHT_BOTTOM
+};
+
 // --- Initialize all motors ---
 void Motor_Init(void)
 {
@@ -50,31 +58,35 @@ void Motor_SetSpeed(Motor_TypeDef motor, uint8_t speed)
 // --- Set motor direction ---
 void Motor_SetDirection(Motor_TypeDef motor, Motor_Direction dir)
 {
-    switch(dir)
+    if(dir == MOTOR_STOP)
     {
-        case MOTOR_FORWARD:
-            HAL_GPIO_WritePin(motors[motor].IN1_Port, motors[motor].IN1_Pin, GPIO_PIN_SET);
-            HAL_GPIO_WritePin(motors[motor].IN2_Port, motors[motor].IN2_Pin, GPIO_PIN_RESET);
-            break;
+        HAL_GPIO_WritePin(motors[motor].IN1_Port, motors[motor].IN1_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(motors[motor].IN2_Port, motors[motor].IN2_Pin, GPIO_PIN_RESET);
+        return;
+    }
 
-        case MOTOR_BACKWARD:
-            HAL_GPIO_WritePin(motors[motor].IN1_Port, motors[motor].IN1_Pin, GPIO_PIN_RESET);
-            HAL_GPIO_WritePin(motors[motor].IN2_Port, motors[motor].IN2_Pin, GPIO_PIN_SET);
-            break;
+    Motor_Direction realDir = dir;
+    if(motor_dir_sign[motor] < 0)
+        realDir = (dir == MOTOR_FORWARD) ? MOTOR_BACKWARD : MOTOR_FORWARD;
 
-        case MOTOR_STOP:
-        default:
-            HAL_GPIO_WritePin(motors[motor].IN1_Port, motors[motor].IN1_Pin, GPIO_PIN_RESET);
-            HAL_GPIO_WritePin(motors[motor].IN2_Port, motors[motor].IN2_Pin, GPIO_PIN_RESET);
-            break;
+    if(realDir == MOTOR_FORWARD)
+    {
+        HAL_GPIO_WritePin(motors[motor].IN1_Port, motors[motor].IN1_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(motors[motor].IN2_Port, motors[motor].IN2_Pin, GPIO_PIN_RESET);
+    }
+    else
+    {
+        HAL_GPIO_WritePin(motors[motor].IN1_Port, motors[motor].IN1_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(motors[motor].IN2_Port, motors[motor].IN2_Pin, GPIO_PIN_SET);
     }
 }
+
 
 // --- Stop motor ---
 void Motor_Stop(Motor_TypeDef motor)
 {
-    Motor_SetDirection(motor, MOTOR_STOP);
-    Motor_SetSpeed(motor, 0);
+	Motor_SetDirection(motor, MOTOR_STOP);
+	__HAL_TIM_SET_COMPARE(motors[motor].htim, motors[motor].Channel, 0);
 }
 
 // --- Move all motors in same direction ---

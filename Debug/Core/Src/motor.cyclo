@@ -1,5 +1,5 @@
-../Core/Src/motor.c:30:6:Motor_Init	2
-../Core/Src/motor.c:43:6:Motor_SetSpeed	5
-../Core/Src/motor.c:51:6:Motor_SetDirection	3
-../Core/Src/motor.c:74:6:Motor_Stop	1
-../Core/Src/motor.c:81:6:Motor_MoveAll	2
+../Core/Src/motor.c:38:6:Motor_Init	2
+../Core/Src/motor.c:51:6:Motor_SetSpeed	5
+../Core/Src/motor.c:59:6:Motor_SetDirection	5
+../Core/Src/motor.c:86:6:Motor_Stop	4
+../Core/Src/motor.c:93:6:Motor_MoveAll	2

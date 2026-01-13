@@ -93,5 +93,7 @@ void General_Run(int16_t angle, uint8_t speed)
 // Stop all motors
 void Robot_Stop(void)
 {
-    Motor_MoveAll(MOTOR_FORWARD, 100);
+    //Motor_MoveAll(MOTOR_STOP, 0);
+	Motor_MoveAll(MOTOR_BACKWARD, 50);
+
 }

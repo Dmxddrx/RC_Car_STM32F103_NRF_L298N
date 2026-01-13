@@ -105,16 +105,20 @@ int main(void)
   Motor_Init();
 
   // Example: test forward for 2 seconds
+  int16_t angle = 135;
+  uint8_t speed = 10;
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+      General_Run(angle, speed);
+  }
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  /*while (1)
+  {
 	  General_Run(0, 50);  // angle 0° = forward, speed 50%
 	  HAL_Delay(100);      // small delay to allow HAL
-    /* USER CODE BEGIN 3 */
-  }
+  }*/
   /* USER CODE END 3 */
 }
 
@@ -248,6 +252,14 @@ static void MX_TIM1_Init(void)
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
   sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
