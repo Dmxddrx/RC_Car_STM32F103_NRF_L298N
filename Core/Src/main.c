@@ -105,13 +105,14 @@ int main(void)
   Motor_Init();
 
   // Example: test forward for 2 seconds
-  General_Run();
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  General_Run(0, 50);  // angle 0° = forward, speed 50%
+	  HAL_Delay(100);      // small delay to allow HAL
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

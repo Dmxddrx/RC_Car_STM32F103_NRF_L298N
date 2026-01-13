@@ -48,4 +48,41 @@ void Motor_SetSpeed(Motor_TypeDef motor, uint8_t speed)
 }
 
 // --- Set motor direction ---
-void Motor_SetDirection(Motor_TypeDef motor, Motor_Dir_
+void Motor_SetDirection(Motor_TypeDef motor, Motor_Direction dir)
+{
+    switch(dir)
+    {
+        case MOTOR_FORWARD:
+            HAL_GPIO_WritePin(motors[motor].IN1_Port, motors[motor].IN1_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(motors[motor].IN2_Port, motors[motor].IN2_Pin, GPIO_PIN_RESET);
+            break;
+
+        case MOTOR_BACKWARD:
+            HAL_GPIO_WritePin(motors[motor].IN1_Port, motors[motor].IN1_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(motors[motor].IN2_Port, motors[motor].IN2_Pin, GPIO_PIN_SET);
+            break;
+
+        case MOTOR_STOP:
+        default:
+            HAL_GPIO_WritePin(motors[motor].IN1_Port, motors[motor].IN1_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(motors[motor].IN2_Port, motors[motor].IN2_Pin, GPIO_PIN_RESET);
+            break;
+    }
+}
+
+// --- Stop motor ---
+void Motor_Stop(Motor_TypeDef motor)
+{
+    Motor_SetDirection(motor, MOTOR_STOP);
+    Motor_SetSpeed(motor, 0);
+}
+
+// --- Move all motors in same direction ---
+void Motor_MoveAll(Motor_Direction dir, uint8_t speed)
+{
+    for(int i=0;i<4;i++)
+    {
+        Motor_SetDirection((Motor_TypeDef)i, dir);
+        Motor_SetSpeed((Motor_TypeDef)i, speed);
+    }
+}
