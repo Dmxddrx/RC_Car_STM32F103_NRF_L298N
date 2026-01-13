@@ -415,9 +415,9 @@ void Robot_Stop(void)
 {
  80003b2:	b580      	push	{r7, lr}
  80003b4:	af00      	add	r7, sp, #0
-    Motor_MoveAll(MOTOR_STOP, 0);
- 80003b6:	2100      	movs	r1, #0
- 80003b8:	2000      	movs	r0, #0
+    Motor_MoveAll(MOTOR_FORWARD, 100);
+ 80003b6:	2164      	movs	r1, #100	@ 0x64
+ 80003b8:	2001      	movs	r0, #1
  80003ba:	f000 fb98 	bl	8000aee <Motor_MoveAll>
 }
  80003be:	bf00      	nop
