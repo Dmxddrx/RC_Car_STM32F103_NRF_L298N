@@ -1,0 +1,11 @@
+../Core/Src/nrf24_rx.c:15:13:CSN_Low	1
+../Core/Src/nrf24_rx.c:16:13:CSN_High	1
+../Core/Src/nrf24_rx.c:18:13:CE_Low	1
+../Core/Src/nrf24_rx.c:19:13:CE_High	1
+../Core/Src/nrf24_rx.c:21:16:SPI_RW	1
+../Core/Src/nrf24_rx.c:28:13:NRF_WriteReg	1
+../Core/Src/nrf24_rx.c:36:16:NRF_ReadReg	1
+../Core/Src/nrf24_rx.c:47:6:NRF24_Init	2
+../Core/Src/nrf24_rx.c:75:6:NRF24_DataAvailable	1
+../Core/Src/nrf24_rx.c:81:6:NRF24_Read	3
+../Core/Src/nrf24_rx.c:99:6:NRF24_IsConnected	1

@@ -1,7 +1,7 @@
 "./Core/Src/general.o"
 "./Core/Src/main.o"
 "./Core/Src/motor.o"
-"./Core/Src/nrf.o"
+"./Core/Src/nrf24_rx.o"
 "./Core/Src/stm32f1xx_hal_msp.o"
 "./Core/Src/stm32f1xx_it.o"
 "./Core/Src/syscalls.o"

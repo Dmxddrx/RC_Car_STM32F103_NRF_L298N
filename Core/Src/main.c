@@ -103,6 +103,8 @@ int main(void)
   /* USER CODE END 2 */
   // Initialize motors
   Motor_Init();
+  NRF24_Init();
+
 
   // Example: test forward for 2 seconds
   /*int16_t angle = 315;
@@ -114,11 +116,41 @@ int main(void)
   }*/
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  ControlPacket rx;
+  uint32_t lastRxTime = 0;
+
   while (1)
   {
-	  General_Run(0, 50);  // angle 0° = forward, speed 50%
-	  HAL_Delay(100);      // small delay to allow HAL
+      if (NRF24_Read(&rx))
+      {
+          lastRxTime = HAL_GetTick();
+
+          /* Convert direction enum → angle */
+          static const int16_t dirAngle[9] = {
+              0,    // STOP
+              0,    // FWD
+              315,  // FWD_RIGHT
+              90,   // RIGHT
+              135,  // BACK_RIGHT
+              180,  // BACK
+              225,  // BACK_LEFT
+              270,  // LEFT
+              45    // FWD_LEFT
+          };
+
+          if (rx.direction == 0)
+              Robot_Stop();
+          else
+              General_Run(dirAngle[rx.direction], rx.speed);
+      }
+
+      /* -------- FAILSAFE -------- */
+      if (HAL_GetTick() - lastRxTime > 500)
+      {
+          Robot_Stop();
+      }
   }
+
   /* USER CODE END 3 */
 }
 
