@@ -61,18 +61,25 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define IN1_Left_Pin GPIO_PIN_0
 #define IN1_Left_GPIO_Port GPIOB
+
 #define IN2_Left_Pin GPIO_PIN_1
 #define IN2_Left_GPIO_Port GPIOB
+
 #define IN3_Left_Pin GPIO_PIN_10
 #define IN3_Left_GPIO_Port GPIOB
+
 #define IN4_Left_Pin GPIO_PIN_11
 #define IN4_Left_GPIO_Port GPIOB
+
 #define IN1_Right_Pin GPIO_PIN_12
 #define IN1_Right_GPIO_Port GPIOB
+
 #define IN2_Right_Pin GPIO_PIN_13
 #define IN2_Right_GPIO_Port GPIOB
+
 #define IN3_Right_Pin GPIO_PIN_14
 #define IN3_Right_GPIO_Port GPIOB
+
 #define IN4_Right_Pin GPIO_PIN_15
 #define IN4_Right_GPIO_Port GPIOB
 

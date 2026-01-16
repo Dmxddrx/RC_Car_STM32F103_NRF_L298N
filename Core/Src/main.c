@@ -18,8 +18,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "motor.h"
+//#include "motor.h"
 #include "general.h"
+#include "nrf24_rx.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -116,41 +117,11 @@ int main(void)
   }*/
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  ControlPacket rx;
-  uint32_t lastRxTime = 0;
-
   while (1)
   {
-      if (NRF24_Read(&rx))
-      {
-          lastRxTime = HAL_GetTick();
-
-          /* Convert direction enum → angle */
-          static const int16_t dirAngle[9] = {
-              0,    // STOP
-              0,    // FWD
-              315,  // FWD_RIGHT
-              90,   // RIGHT
-              135,  // BACK_RIGHT
-              180,  // BACK
-              225,  // BACK_LEFT
-              270,  // LEFT
-              45    // FWD_LEFT
-          };
-
-          if (rx.direction == 0)
-              Robot_Stop();
-          else
-              General_Run(dirAngle[rx.direction], rx.speed);
-      }
-
-      /* -------- FAILSAFE -------- */
-      if (HAL_GetTick() - lastRxTime > 500)
-      {
-          Robot_Stop();
-      }
+	  General_Run();  // main logic is in general.c
+	  HAL_Delay(10);  // small delay
   }
-
   /* USER CODE END 3 */
 }
 
