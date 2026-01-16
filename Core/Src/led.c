@@ -3,47 +3,56 @@
 #define LED_BLINK_SLOW_INTERVAL 500  // ms
 #define LED_BLINK_FAST_INTERVAL 100  // ms
 
-void LED_Init(LED_HandleTypeDef *led, TIM_HandleTypeDef *htim, uint32_t channel, uint8_t brightness)
+void LED_Init(LED_HandleTypeDef *led, GPIO_TypeDef *port, uint16_t pin)
 {
-    led->htim = htim;
-    led->channel = channel;
-    led->brightness = brightness;
+    led->port = port;
+    led->pin = pin;
     led->state = LED_STATE_OFF;
     led->lastToggle = HAL_GetTick();
+    led->outputState = 0;
 
-    HAL_TIM_PWM_Start(htim, channel);
-    __HAL_TIM_SET_COMPARE(htim, channel, 0); // LED off initially
+    HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET); // LED OFF
 }
 
 void LED_Update(LED_HandleTypeDef *led)
 {
     uint32_t now = HAL_GetTick();
 
-    switch(led->state)
+    switch (led->state)
     {
         case LED_STATE_OFF:
-            __HAL_TIM_SET_COMPARE(led->htim, led->channel, 0);
+            HAL_GPIO_WritePin(led->port, led->pin, GPIO_PIN_RESET);
+            led->outputState = 0;
             break;
 
         case LED_STATE_STEADY:
-            __HAL_TIM_SET_COMPARE(led->htim, led->channel, led->brightness);
+            HAL_GPIO_WritePin(led->port, led->pin, GPIO_PIN_SET);
+            led->outputState = 1;
             break;
 
         case LED_STATE_BLINK_SLOW:
-            if(now - led->lastToggle >= LED_BLINK_SLOW_INTERVAL)
+            if (now - led->lastToggle >= LED_BLINK_SLOW_INTERVAL)
             {
                 led->lastToggle = now;
-                uint32_t current = __HAL_TIM_GET_COMPARE(led->htim, led->channel);
-                __HAL_TIM_SET_COMPARE(led->htim, led->channel, (current>0)?0:led->brightness);
+                led->outputState ^= 1;
+                HAL_GPIO_WritePin(
+                    led->port,
+                    led->pin,
+                    led->outputState ? GPIO_PIN_SET : GPIO_PIN_RESET
+                );
             }
             break;
 
         case LED_STATE_BLINK_FAST:
-            if(now - led->lastToggle >= LED_BLINK_FAST_INTERVAL)
+            if (now - led->lastToggle >= LED_BLINK_FAST_INTERVAL)
             {
                 led->lastToggle = now;
-                uint32_t current = __HAL_TIM_GET_COMPARE(led->htim, led->channel);
-                __HAL_TIM_SET_COMPARE(led->htim, led->channel, (current>0)?0:led->brightness);
+                led->outputState ^= 1;
+                HAL_GPIO_WritePin(
+                    led->port,
+                    led->pin,
+                    led->outputState ? GPIO_PIN_SET : GPIO_PIN_RESET
+                );
             }
             break;
     }

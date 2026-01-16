@@ -12,14 +12,14 @@ typedef enum {
 } LED_State;
 
 typedef struct {
-    TIM_HandleTypeDef *htim; // timer handle
-    uint32_t channel;        // timer channel
-    uint8_t brightness;      // PWM brightness
-    LED_State state;         // current state
-    uint32_t lastToggle;     // last toggle time
+    GPIO_TypeDef *port;
+    uint16_t pin;
+    LED_State state;
+    uint32_t lastToggle;
+    uint8_t outputState;   // 0 = OFF, 1 = ON
 } LED_HandleTypeDef;
 
-void LED_Init(LED_HandleTypeDef *led, TIM_HandleTypeDef *htim, uint32_t channel, uint8_t brightness);
+void LED_Init(LED_HandleTypeDef *led, GPIO_TypeDef *port, uint16_t pin);
 void LED_Update(LED_HandleTypeDef *led);
 
 #endif

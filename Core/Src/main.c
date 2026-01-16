@@ -20,6 +20,8 @@
 #include "main.h"
 //#include "motor.h"
 #include "general.h"
+#include "motor.h"
+#include "led.h"
 #include "nrf24_rx.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -48,6 +50,7 @@ SPI_HandleTypeDef hspi1;
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
+LED_HandleTypeDef statusLED;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -106,6 +109,8 @@ int main(void)
   Motor_Init();
   NRF24_Init();
 
+  // Initialize LED on PA0, TIM1_CH1, brightness 128
+  LED_Init(&statusLED, GPIOA, GPIO_PIN_0);
 
   // Example: test forward for 2 seconds
   /*int16_t angle = 315;
@@ -398,6 +403,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
