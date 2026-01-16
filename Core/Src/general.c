@@ -22,31 +22,23 @@ void General_Run(void)
         return;
     }
 
-    // ---------- No new packet ----------
-    if (!NRF24_DataAvailable()) {
-        Motor_MoveAll(MOTOR_STOP, 0);
-        statusLED.state = LED_STATE_STEADY;  // steady LED
-        LED_Update(&statusLED);
-        return;
-    }
-
     // ---------- Read packet ----------
     if (!NRF24_Read(&pkt)) {
     	 Motor_MoveAll(MOTOR_STOP, 0);
-    	 statusLED.state = LED_STATE_BLINK_SLOW;  // indicate error reading
+    	 statusLED.state = LED_STATE_BLINK_FAST;  // indicate error reading
 		 LED_Update(&statusLED);
         return;
     }
 
     // Packet received → fast blink
-    statusLED.state = LED_STATE_BLINK_FAST;
+    statusLED.state = LED_STATE_STEADY;
     LED_Update(&statusLED);
 
     // ---------- Determine angle ----------
     int16_t angle = directionAngles[pkt.direction];
     if (angle < 0) {
     	 Motor_MoveAll(MOTOR_STOP, 0);
-         statusLED.state = LED_STATE_BLINK_SLOW;  // invalid direction
+         statusLED.state = LED_STATE_STEADY;  // invalid direction
          LED_Update(&statusLED);
         return;
     }

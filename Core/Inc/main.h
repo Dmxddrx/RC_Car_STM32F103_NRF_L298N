@@ -83,6 +83,7 @@ void Error_Handler(void);
 #define IN4_Right_Pin GPIO_PIN_15
 #define IN4_Right_GPIO_Port GPIOB
 
+
 /* USER CODE BEGIN Private defines */
 // TIM handles
 extern TIM_HandleTypeDef htim1;
