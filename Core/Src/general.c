@@ -3,7 +3,7 @@
 #include "motor.h"
 #include "led.h"
 
-#define MANUAL_TEST_MODE   1   // set to 0 to restore NRF control
+#define MANUAL_TEST_MODE   0   // set to 0 to restore NRF control
 
 extern LED_HandleTypeDef statusLED;
 
@@ -69,7 +69,7 @@ void General_Run(void)
         if (angle < 0)
         {
             Motor_MoveAll(MOTOR_STOP, 0);
-            nextLedState = LED_STATE_BLINK_FAST;
+            nextLedState = LED_STATE_OFF;
         }
         else
         {
