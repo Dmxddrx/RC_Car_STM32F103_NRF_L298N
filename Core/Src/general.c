@@ -37,50 +37,27 @@ void General_Run(void)
 	#endif
 
 
-    ControlPacket pkt;
+    ControlPacket *pkt = NRF24_GetLatest();
     LED_State nextLedState = LED_STATE_OFF;
 
-    // ---------- NRF not connected ----------
-    if (!NRF24_IsConnected())
-    {
+
+    if(!NRF24_IsConnected()){
         Motor_MoveAll(MOTOR_STOP, 0);
         nextLedState = LED_STATE_BLINK_SLOW;
     }
-
-    // ---------- NRF connected but idle ----------
-    else if (!NRF24_DataAvailable())
-    {
+    else if(pkt == NULL){
         Motor_MoveAll(MOTOR_STOP, 0);
         nextLedState = LED_STATE_HEARTBEAT;
     }
-
-    // ---------- RX error ----------
-    else if (!NRF24_Read(&pkt))
-    {
-        Motor_MoveAll(MOTOR_STOP, 0);
-        nextLedState = LED_STATE_BLINK_FAST;
-    }
-
-    // ---------- Valid packet ----------
-    else
-    {
-        int16_t angle = directionAngles[pkt.direction];
-
-        if (angle < 0)
-        {
+    else{
+        int16_t angle = directionAngles[pkt->direction];
+        if(angle < 0){
             Motor_MoveAll(MOTOR_STOP, 0);
             nextLedState = LED_STATE_OFF;
-        }
-        else
-        {
-            uint8_t speed = (pkt.speed * 100) / 70;
+        } else {
+            uint8_t speed = (pkt->speed * 100) / 70;
             Motor_RunDirection(angle, speed);
-
-            // Motor running → steady ON
             nextLedState = LED_STATE_STEADY;
-
-            // OPTIONAL: brief RX indication
-            // nextLedState = LED_STATE_DOUBLE_BLINK;
         }
     }
 

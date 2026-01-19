@@ -44,6 +44,10 @@ static uint8_t NRF_ReadReg(uint8_t reg){
     return val;
 }
 
+// ---------- Latest received packet ----------
+static volatile bool pktAvailable = false;
+static ControlPacket latestPkt;
+
 void NRF24_Init(void){
     CE_Low();
     HAL_Delay(5); // Power-on reset
@@ -83,30 +87,29 @@ void NRF24_Init(void){
 
 // Called from EXTI0_IRQHandler in stm32f1xx_it.c
 void NRF24_HandleIRQ(void) {
-    nrfPacketAvailable = true;
-}
-
-// ---------- API replacements ----------
-bool NRF24_DataAvailable(void){
-    return nrfPacketAvailable;
-}
-
-bool NRF24_Read(ControlPacket *pkt){
-    if(!nrfPacketAvailable) return false;
-
+    // Read the payload directly
     CSN_Low();
     SPI_RW(NRF_R_RX_PAYLOAD);
-    uint8_t *p = (uint8_t*)pkt;
+    uint8_t *p = (uint8_t*)&latestPkt;
     for(int i=0; i<sizeof(ControlPacket); i++) p[i] = SPI_RW(NRF_NOP);
     CSN_High();
 
     // Clear IRQ flags
     NRF_WriteReg(STATUS, 0x40);
 
-    // Reset packet available flag
-    nrfPacketAvailable = false;
+    // Mark packet available
+    pktAvailable = true;
+}
 
-    return true;
+// ---------- Fully event-driven API ----------
+
+// Returns pointer to the latest packet if available, NULL otherwise
+ControlPacket* NRF24_GetLatest(void){
+    if(pktAvailable){
+        pktAvailable = false;
+        return (ControlPacket*)&latestPkt;
+    }
+    return NULL;
 }
 
 bool NRF24_IsConnected(void){

@@ -248,6 +248,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOB, IN1_Left_Pin|IN2_Left_Pin|IN3_Left_Pin|IN4_Left_Pin
                           |IN1_Right_Pin|IN2_Right_Pin|IN3_Right_Pin|IN4_Right_Pin, GPIO_PIN_RESET);
 
+  /* ---------- SPI CE/CSN output pins ---------- */
   /*Configure GPIO pins : PA3 PA4 */
   GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -255,6 +256,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+
+  /* ---------- L298N motor IN pins ---------- */
   /*Configure GPIO pins : IN1_Left_Pin IN2_Left_Pin IN3_Left_Pin IN4_Left_Pin
                            IN1_Right_Pin IN2_Right_Pin IN3_Right_Pin IN4_Right_Pin */
   GPIO_InitStruct.Pin = IN1_Left_Pin|IN2_Left_Pin|IN3_Left_Pin|IN4_Left_Pin
@@ -264,27 +267,26 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  /*Configure GPIO pin : PA1 | PA2 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA0 */
+  /* ---------- NRF24 IRQ pin: PA0 as input with EXTI ---------- */
   GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING; // IRQ active low
+  GPIO_InitStruct.Pull = GPIO_PULLUP;          // internal pull-up
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA2 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  /* Enable EXTI0 interrupt in NVIC */
+    HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
+
+
+  /* ---------- Status LED ---------- */
   /*Configure GPIO pin : PA13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;

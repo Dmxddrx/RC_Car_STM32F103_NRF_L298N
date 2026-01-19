@@ -9,6 +9,7 @@ typedef struct {
     uint8_t speed;
 } ControlPacket;
 
+// ---------- NRF24 registers ----------
 #define NRF_R_REGISTER      0x00
 #define NRF_W_REGISTER      0x20
 #define NRF_R_RX_PAYLOAD    0x61
@@ -24,9 +25,16 @@ typedef struct {
 #define RX_ADDR_P0          0x0A
 #define RX_PW_P0            0x11
 
+// ---------- Initialization ----------
 void NRF24_Init(void);
-bool NRF24_DataAvailable(void);
-bool NRF24_Read(ControlPacket *pkt);
+
+// ---------- Event-driven API ----------
+ControlPacket* NRF24_GetLatest(void);   // returns pointer to latest packet or NULL if none
+
+// ---------- IRQ handler called from EXTI0_IRQHandler ----------
+void NRF24_HandleIRQ(void);
+
+// ---------- Optional legacy polling API
 bool NRF24_IsConnected(void);
 
 #endif

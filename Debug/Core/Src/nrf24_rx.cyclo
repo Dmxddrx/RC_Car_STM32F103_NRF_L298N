@@ -5,8 +5,7 @@
 ../Core/Src/nrf24_rx.c:25:16:SPI_RW	1
 ../Core/Src/nrf24_rx.c:31:13:NRF_WriteReg	1
 ../Core/Src/nrf24_rx.c:38:16:NRF_ReadReg	1
-../Core/Src/nrf24_rx.c:47:6:NRF24_Init	2
-../Core/Src/nrf24_rx.c:85:6:NRF24_HandleIRQ	1
-../Core/Src/nrf24_rx.c:90:6:NRF24_DataAvailable	1
-../Core/Src/nrf24_rx.c:94:6:NRF24_Read	3
-../Core/Src/nrf24_rx.c:112:6:NRF24_IsConnected	1
+../Core/Src/nrf24_rx.c:51:6:NRF24_Init	2
+../Core/Src/nrf24_rx.c:89:6:NRF24_HandleIRQ	2
+../Core/Src/nrf24_rx.c:107:16:NRF24_GetLatest	2
+../Core/Src/nrf24_rx.c:115:6:NRF24_IsConnected	1
