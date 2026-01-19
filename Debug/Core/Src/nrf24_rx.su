@@ -6,6 +6,6 @@
 ../Core/Src/nrf24_rx.c:25:13:NRF_WriteReg	16	static
 ../Core/Src/nrf24_rx.c:32:16:NRF_ReadReg	24	static
 ../Core/Src/nrf24_rx.c:41:6:NRF24_Init	16	static
-../Core/Src/nrf24_rx.c:61:6:NRF24_DataAvailable	16	static
-../Core/Src/nrf24_rx.c:66:6:NRF24_Read	32	static
-../Core/Src/nrf24_rx.c:79:6:NRF24_IsConnected	8	static
+../Core/Src/nrf24_rx.c:66:6:NRF24_DataAvailable	16	static
+../Core/Src/nrf24_rx.c:71:6:NRF24_Read	32	static
+../Core/Src/nrf24_rx.c:84:6:NRF24_IsConnected	8	static

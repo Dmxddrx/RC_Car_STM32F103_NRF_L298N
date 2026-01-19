@@ -10,48 +10,58 @@ static const int16_t directionAngles[9] = {
     -1, 0, 45, 90, 225, 180, 135, 270, 315
 };
 
+
 void General_Run(void)
 {
     ControlPacket pkt;
+    LED_State nextLedState = LED_STATE_OFF;
 
-    // ---------- Check NRF initialization ----------
-	if (!NRF24_IsConnected()) {
-		// Module not initialized / wrong channel
-		statusLED.state = LED_STATE_HEARTBEAT; // slow blink
-		LED_Update(&statusLED);
-		return;
-	}
-
-    // ---------- NRF not responding ----------
-    if (!NRF24_DataAvailable()) {
-    	 Motor_MoveAll(MOTOR_STOP, 0);
-    	 statusLED.state = LED_STATE_BLINK_SLOW;  // slow blink
-		 LED_Update(&statusLED);
-        return;
+    // ---------- NRF not connected ----------
+    if (!NRF24_IsConnected())
+    {
+        Motor_MoveAll(MOTOR_STOP, 0);
+        nextLedState = LED_STATE_BLINK_SLOW;
     }
 
-    // ---------- Read packet ----------
-    if (!NRF24_Read(&pkt)) {
-    	 Motor_MoveAll(MOTOR_STOP, 0);
-    	 statusLED.state = LED_STATE_BLINK_FAST;  // indicate error reading
-		 LED_Update(&statusLED);
-        return;
+    // ---------- NRF connected but idle ----------
+    else if (!NRF24_DataAvailable())
+    {
+        Motor_MoveAll(MOTOR_STOP, 0);
+        nextLedState = LED_STATE_HEARTBEAT;
     }
 
-    // Packet received → fast blink
-    statusLED.state = LED_STATE_DOUBLE_BLINK;
+    // ---------- RX error ----------
+    else if (!NRF24_Read(&pkt))
+    {
+        Motor_MoveAll(MOTOR_STOP, 0);
+        nextLedState = LED_STATE_BLINK_FAST;
+    }
+
+    // ---------- Valid packet ----------
+    else
+    {
+        int16_t angle = directionAngles[pkt.direction];
+
+        if (angle < 0)
+        {
+            Motor_MoveAll(MOTOR_STOP, 0);
+            nextLedState = LED_STATE_BLINK_FAST;
+        }
+        else
+        {
+            uint8_t speed = (pkt.speed * 100) / 70;
+            Motor_RunDirection(angle, speed);
+
+            // Motor running → steady ON
+            nextLedState = LED_STATE_STEADY;
+
+            // OPTIONAL: brief RX indication
+            // nextLedState = LED_STATE_DOUBLE_BLINK;
+        }
+    }
+
+    // ---------- Apply LED state once ----------
+    statusLED.state = nextLedState;
     LED_Update(&statusLED);
-
-    // ---------- Determine angle ----------
-    int16_t angle = directionAngles[pkt.direction];
-    if (angle < 0) {
-    	 Motor_MoveAll(MOTOR_STOP, 0);
-         statusLED.state = LED_STATE_STEADY;  // invalid direction
-         LED_Update(&statusLED);
-        return;
-    }
-
-    // ---------- Run motor ----------
-    uint8_t speed = (pkt.speed * 100) / 70; // scale to 0-100%
-    Motor_RunDirection(angle, speed);
 }
+

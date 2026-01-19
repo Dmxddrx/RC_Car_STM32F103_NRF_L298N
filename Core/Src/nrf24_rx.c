@@ -40,9 +40,11 @@ static uint8_t NRF_ReadReg(uint8_t reg){
 
 void NRF24_Init(void){
     CE_Low();
-    HAL_Delay(5);
+    HAL_Delay(5); // Power-on reset
 
-    NRF_WriteReg(CONFIG,0x0B);
+    NRF_WriteReg(CONFIG,0x0B); // PWR_UP=1, PRIM_RX=1
+    HAL_Delay(2); // ✅ REQUIRED (>=1.5ms)
+
     NRF_WriteReg(EN_AA,0x01);
     NRF_WriteReg(EN_RXADDR,0x01);
     NRF_WriteReg(RF_CH,108);
@@ -54,7 +56,10 @@ void NRF24_Init(void){
     for(int i=0;i<5;i++) SPI_RW(rxAddress[i]);
     CSN_High();
 
-    CSN_Low(); SPI_RW(NRF_FLUSH_RX); CSN_High();
+    CSN_Low();
+    SPI_RW(NRF_FLUSH_RX);
+    CSN_High();
+
     CE_High();
 }
 
