@@ -3,9 +3,11 @@
 extern SPI_HandleTypeDef hspi1;
 
 #define NRF_CE_PORT   GPIOA
-#define NRF_CE_PIN    GPIO_PIN_3
+#define NRF_CE_PIN    GPIO_PIN_4
 #define NRF_CSN_PORT  GPIOA
-#define NRF_CSN_PIN   GPIO_PIN_4
+#define NRF_CSN_PIN   GPIO_PIN_3
+
+#define FIFO_STATUS 0x17
 
 static const uint8_t rxAddress[5] = {'C','A','R','0','1'};
 
@@ -40,7 +42,7 @@ void NRF24_Init(void){
     CE_Low();
     HAL_Delay(5);
 
-    NRF_WriteReg(CONFIG,0x0F);
+    NRF_WriteReg(CONFIG,0x0B);
     NRF_WriteReg(EN_AA,0x01);
     NRF_WriteReg(EN_RXADDR,0x01);
     NRF_WriteReg(RF_CH,108);
@@ -57,8 +59,8 @@ void NRF24_Init(void){
 }
 
 bool NRF24_DataAvailable(void){
-    uint8_t status = NRF_ReadReg(STATUS);
-    return (status & 0x40);
+	uint8_t fifo = NRF_ReadReg(FIFO_STATUS);
+	return !(fifo & 0x01); // RX_EMPTY = 0
 }
 
 bool NRF24_Read(ControlPacket *pkt){
@@ -75,5 +77,6 @@ bool NRF24_Read(ControlPacket *pkt){
 }
 
 bool NRF24_IsConnected(void){
-    return NRF_ReadReg(RF_CH)==108;
+	NRF_WriteReg(RF_CH, 108);
+	return (NRF_ReadReg(RF_CH) == 108);
 }

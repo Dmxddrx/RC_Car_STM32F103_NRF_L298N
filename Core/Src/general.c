@@ -14,6 +14,14 @@ void General_Run(void)
 {
     ControlPacket pkt;
 
+    // ---------- Check NRF initialization ----------
+	if (!NRF24_IsConnected()) {
+		// Module not initialized / wrong channel
+		statusLED.state = LED_STATE_HEARTBEAT; // slow blink
+		LED_Update(&statusLED);
+		return;
+	}
+
     // ---------- NRF not responding ----------
     if (!NRF24_DataAvailable()) {
     	 Motor_MoveAll(MOTOR_STOP, 0);
@@ -31,7 +39,7 @@ void General_Run(void)
     }
 
     // Packet received → fast blink
-    statusLED.state = LED_STATE_STEADY;
+    statusLED.state = LED_STATE_DOUBLE_BLINK;
     LED_Update(&statusLED);
 
     // ---------- Determine angle ----------
