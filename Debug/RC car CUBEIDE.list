@@ -35,17 +35,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_rnglists 0000094e  00000000  00000000  00012628  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  000172ab  00000000  00000000  00012f76  2**0
+ 16 .debug_macro  000172b1  00000000  00000000  00012f76  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000d949  00000000  00000000  0002a221  2**0
+ 17 .debug_line   0000d94b  00000000  00000000  0002a227  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000864f9  00000000  00000000  00037b6a  2**0
+ 18 .debug_str    0008650c  00000000  00000000  00037b72  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  000be063  2**0
+ 19 .comment      00000043  00000000  00000000  000be07e  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00003150  00000000  00000000  000be0a8  2**2
+ 20 .debug_frame  00003150  00000000  00000000  000be0c4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000073  00000000  00000000  000c11f8  2**0
+ 21 .debug_line_str 00000073  00000000  00000000  000c1214  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -79,7 +79,7 @@ Disassembly of section .text:
  8000148:	08003704 	.word	0x08003704
 
 0800014c <General_Run>:
-    -1, 0, 45, 90, 225, 180, 135, 270, 315
+	135		// index 8	- Backward - Right
 };
 
 
@@ -88,6 +88,10 @@ void General_Run(void)
  800014c:	b580      	push	{r7, lr}
  800014e:	b082      	sub	sp, #8
  8000150:	af00      	add	r7, sp, #0
+		return;   // bypass NRF logic completely
+	#endif
+
+
     ControlPacket pkt;
     LED_State nextLedState = LED_STATE_OFF;
  8000152:	2300      	movs	r3, #0

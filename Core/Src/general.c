@@ -3,16 +3,40 @@
 #include "motor.h"
 #include "led.h"
 
+#define MANUAL_TEST_MODE   1   // set to 0 to restore NRF control
+
 extern LED_HandleTypeDef statusLED;
 
 // Direction mapping for STM32 motors
 static const int16_t directionAngles[9] = {
-    -1, 0, 45, 90, 225, 180, 135, 270, 315
+    -1, 	// index 0	- Stop
+	180, 	// index 1	- Backward
+	225, 	// index 2	- Backward - Left
+	270, 	// index 3	- Left
+	315, 	// index 4	- Forward - Left
+	0, 		// index 5	- Forward
+	45, 	// index 6	- Forward - Right
+	90, 	// index 7	- Right
+	135		// index 8	- Backward - Right
 };
 
 
 void General_Run(void)
 {
+	#if MANUAL_TEST_MODE
+		// ===== MANUAL MOTOR TEST (REMOTE OFF) =====
+		int16_t angle = directionAngles[8];   // 2nd direction (45°)
+		uint8_t speed = 40;                   // 40%
+
+		Motor_RunDirection(angle, speed);
+
+		statusLED.state = LED_STATE_STEADY;
+		LED_Update(&statusLED);
+
+		return;   // bypass NRF logic completely
+	#endif
+
+
     ControlPacket pkt;
     LED_State nextLedState = LED_STATE_OFF;
 
