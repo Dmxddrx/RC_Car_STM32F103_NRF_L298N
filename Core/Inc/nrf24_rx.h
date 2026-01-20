@@ -37,4 +37,11 @@ void NRF24_HandleIRQ(void);
 // ---------- Optional legacy polling API
 bool NRF24_IsConnected(void);
 
+uint8_t NRF24_ReadStatus(void);
+uint8_t NRF24_ReadFIFO(void);
+uint8_t NRF24_ReadChannel(void);
+
+extern volatile uint32_t nrfIrqCount;
+
+
 #endif

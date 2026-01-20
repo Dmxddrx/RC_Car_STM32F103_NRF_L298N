@@ -16,6 +16,8 @@ static const uint8_t rxAddress[5] = {'C','A','R','0','1'};
 
 // Flag set by IRQ
 volatile bool nrfPacketAvailable = false;
+volatile uint32_t nrfIrqCount = 0;
+
 
 static void CSN_Low(void)  { HAL_GPIO_WritePin(NRF_CSN_PORT,NRF_CSN_PIN,GPIO_PIN_RESET); }
 static void CSN_High(void) { HAL_GPIO_WritePin(NRF_CSN_PORT,NRF_CSN_PIN,GPIO_PIN_SET); }
@@ -87,6 +89,8 @@ void NRF24_Init(void){
 
 // Called from EXTI0_IRQHandler in stm32f1xx_it.c
 void NRF24_HandleIRQ(void) {
+
+	nrfIrqCount++;
     // Read the payload directly
     CSN_Low();
     SPI_RW(NRF_R_RX_PAYLOAD);
@@ -116,3 +120,22 @@ bool NRF24_IsConnected(void){
     NRF_WriteReg(RF_CH, 108);
     return (NRF_ReadReg(RF_CH) == 108);
 }
+
+uint8_t NRF24_ReadStatus(void)
+{
+    CSN_Low();
+    uint8_t status = SPI_RW(NRF_NOP);
+    CSN_High();
+    return status;
+}
+
+uint8_t NRF24_ReadFIFO(void)
+{
+    return NRF_ReadReg(FIFO_STATUS);
+}
+
+uint8_t NRF24_ReadChannel(void)
+{
+    return NRF_ReadReg(RF_CH);
+}
+
