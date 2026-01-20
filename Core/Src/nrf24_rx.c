@@ -98,8 +98,8 @@ void NRF24_HandleIRQ(void) {
     for(int i=0; i<sizeof(ControlPacket); i++) p[i] = SPI_RW(NRF_NOP);
     CSN_High();
 
-    // Clear IRQ flags
-    NRF_WriteReg(STATUS, 0x40);
+    // Clear RX_DR | TX_DS | MAX_RT
+    NRF_WriteReg(STATUS, 0x70);
 
     // Mark packet available
     pktAvailable = true;
