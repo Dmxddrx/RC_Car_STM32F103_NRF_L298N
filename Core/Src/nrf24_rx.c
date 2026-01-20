@@ -55,7 +55,7 @@ void NRF24_Init(void){
     HAL_Delay(5); // Power-on reset
 
     // PWR_UP=1, PRIM_RX=1
-    NRF_WriteReg(CONFIG, 0x0B);
+    NRF_WriteReg(CONFIG, 0x0F);
     HAL_Delay(2); // >=1.5ms required
 
     NRF_WriteReg(EN_AA, 0x00);
