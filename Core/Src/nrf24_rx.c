@@ -73,6 +73,8 @@ void NRF24_Init(void){
     SPI_RW(NRF_FLUSH_RX);
     CSN_High();
 
+    NRF_WriteReg(STATUS, 0x70);     // clear all IRQ flags
+
     CE_High();
 
     // -------- Configure PA0 IRQ --------
@@ -100,6 +102,10 @@ void NRF24_HandleIRQ(void) {
 
     // Clear RX_DR | TX_DS | MAX_RT
     NRF_WriteReg(STATUS, 0x70);
+
+    CSN_Low();
+    SPI_RW(NRF_FLUSH_RX);
+    CSN_High();
 
     // Mark packet available
     pktAvailable = true;
