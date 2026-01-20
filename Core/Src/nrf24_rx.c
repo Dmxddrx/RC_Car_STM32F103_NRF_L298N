@@ -58,7 +58,7 @@ void NRF24_Init(void){
     NRF_WriteReg(CONFIG, 0x0B);
     HAL_Delay(2); // >=1.5ms required
 
-    NRF_WriteReg(EN_AA, 0x01);
+    NRF_WriteReg(EN_AA, 0x00);
     NRF_WriteReg(EN_RXADDR, 0x01);
     NRF_WriteReg(RF_CH, 108);
     NRF_WriteReg(RF_SETUP, 0x06);
