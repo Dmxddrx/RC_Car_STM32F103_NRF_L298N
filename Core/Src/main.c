@@ -20,6 +20,9 @@
 #include "main.h"
 #include "general.h"
 #include "led.h"
+#include "motor.h"
+#include "nrf24_rx.h"
+#include "oled.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -86,7 +89,8 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  __HAL_RCC_AFIO_CLK_ENABLE();
+  __HAL_AFIO_REMAP_SWJ_NOJTAG();   // Disable JTAG, keep SWD
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -445,6 +449,14 @@ static void MX_GPIO_Init(void)
   /* Enable EXTI5 interrupt (EXTI lines 5–9 share one IRQ) */
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  /* ---------- TIM2 PWM pins: PA0 (CH1), PA1 (CH2) ---------- */
+  GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
 
   /* USER CODE END MX_GPIO_Init_2 */
 }
