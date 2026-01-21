@@ -63,9 +63,9 @@ void SysTick_Handler(void)
 
 extern void NRF24_HandleIRQ(void);  // declare the IRQ handler from nrf24_rx.c
 
-void EXTI0_IRQHandler(void)
+void EXTI9_5_IRQHandler(void)
 {
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0); // clear interrupt flag
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5); // clear interrupt flag
     NRF24_HandleIRQ();                     // call your NRF24 IRQ handler
 }
 

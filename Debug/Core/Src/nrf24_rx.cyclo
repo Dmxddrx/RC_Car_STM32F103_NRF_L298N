@@ -6,9 +6,9 @@
 ../Core/Src/nrf24_rx.c:33:13:NRF_WriteReg	1
 ../Core/Src/nrf24_rx.c:40:16:NRF_ReadReg	1
 ../Core/Src/nrf24_rx.c:53:6:NRF24_Init	2
-../Core/Src/nrf24_rx.c:93:6:NRF24_HandleIRQ	2
-../Core/Src/nrf24_rx.c:117:16:NRF24_GetLatest	2
-../Core/Src/nrf24_rx.c:125:6:NRF24_IsConnected	1
-../Core/Src/nrf24_rx.c:130:9:NRF24_ReadStatus	1
-../Core/Src/nrf24_rx.c:138:9:NRF24_ReadFIFO	1
-../Core/Src/nrf24_rx.c:143:9:NRF24_ReadChannel	1
+../Core/Src/nrf24_rx.c:82:6:NRF24_HandleIRQ	2
+../Core/Src/nrf24_rx.c:106:16:NRF24_GetLatest	2
+../Core/Src/nrf24_rx.c:114:6:NRF24_IsConnected	1
+../Core/Src/nrf24_rx.c:119:9:NRF24_ReadStatus	1
+../Core/Src/nrf24_rx.c:127:9:NRF24_ReadFIFO	1
+../Core/Src/nrf24_rx.c:132:9:NRF24_ReadChannel	1

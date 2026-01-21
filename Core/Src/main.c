@@ -436,16 +436,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /* USER CODE BEGIN MX_GPIO_Init_2 */
-  /* ---------- NRF24 IRQ pin: PA0 as input with EXTI ---------- */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING; // IRQ active low
-  GPIO_InitStruct.Pull = GPIO_PULLUP;          // internal pull-up
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  /* ---------- NRF24 IRQ pin: PB5 as input with EXTI ---------- */
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING; // NRF IRQ active LOW
+  GPIO_InitStruct.Pull = GPIO_PULLUP;          // required pull-up
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /* Enable EXTI0 interrupt in NVIC */
-    HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+  /* Enable EXTI5 interrupt (EXTI lines 5–9 share one IRQ) */
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
   /* USER CODE END MX_GPIO_Init_2 */
 }
 

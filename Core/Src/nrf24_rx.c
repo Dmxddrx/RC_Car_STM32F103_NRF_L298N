@@ -7,8 +7,8 @@ extern SPI_HandleTypeDef hspi1;
 #define NRF_CE_PIN    GPIO_PIN_4
 #define NRF_CSN_PORT  GPIOA
 #define NRF_CSN_PIN   GPIO_PIN_3
-#define NRF_IRQ_PORT  GPIOA
-#define NRF_IRQ_PIN   GPIO_PIN_0  // IRQ pin now on PA0
+#define NRF_IRQ_PORT  GPIOB
+#define NRF_IRQ_PIN   GPIO_PIN_5  // IRQ pin now on PA0
 
 #define FIFO_STATUS 0x17
 
@@ -76,20 +76,9 @@ void NRF24_Init(void){
     NRF_WriteReg(STATUS, 0x70);     // clear all IRQ flags
 
     CE_High();
-
-    // -------- Configure PA0 IRQ --------
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-    GPIO_InitStruct.Pin = NRF_IRQ_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;  // NRF IRQ is active low
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    HAL_GPIO_Init(NRF_IRQ_PORT, &GPIO_InitStruct);
-
-    // Enable EXTI0 interrupt
-    HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 }
 
-// Called from EXTI0_IRQHandler in stm32f1xx_it.c
+// ---------- IRQ handler called from EXTI9_5_IRQHandler ----------
 void NRF24_HandleIRQ(void) {
 
 	nrfIrqCount++;
