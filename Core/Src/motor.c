@@ -14,10 +14,13 @@ typedef struct {
 } Motor_PinDef;
 
 Motor_PinDef motors[4] = {
-    {GPIOB, GPIO_PIN_10, GPIOB, GPIO_PIN_11, &htim1, TIM_CHANNEL_2}, // LEFT_TOP
-    {GPIOB, GPIO_PIN_0,  GPIOB, GPIO_PIN_1,  &htim1, TIM_CHANNEL_1}, // LEFT_BOTTOM
-    {GPIOB, GPIO_PIN_12, GPIOB, GPIO_PIN_13, &htim2, TIM_CHANNEL_3}, // RIGHT_TOP
-    {GPIOB, GPIO_PIN_14, GPIOB, GPIO_PIN_15, &htim2, TIM_CHANNEL_4}  // RIGHT_BOTTOM
+		// LEFT motors → TIM1
+		    {GPIOB, GPIO_PIN_10, GPIOB, GPIO_PIN_11, &htim1, TIM_CHANNEL_4}, // LEFT_TOP  (PA11)
+		    {GPIOB, GPIO_PIN_0,  GPIOB, GPIO_PIN_1,  &htim1, TIM_CHANNEL_3}, // LEFT_BOTTOM (PA10)
+
+		    // RIGHT motors → TIM2
+		    {GPIOB, GPIO_PIN_12, GPIOB, GPIO_PIN_13, &htim2, TIM_CHANNEL_1}, // RIGHT_TOP  (PA0)
+		    {GPIOB, GPIO_PIN_14, GPIOB, GPIO_PIN_15, &htim2, TIM_CHANNEL_2}  // RIGHT_BOTTOM (PA1)
 };
 
 static const int8_t motorDirSign[4] = {-1, -1, 1, 1};

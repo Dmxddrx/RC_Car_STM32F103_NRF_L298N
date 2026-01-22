@@ -4,7 +4,7 @@
 #include "led.h"
 #include "oled.h"
 
-#define MANUAL_TEST_MODE   1   // set to 0 to restore NRF control
+#define MANUAL_TEST_MODE   0   // set to 0 to restore NRF control
 #define OLED_DEBUG_MODE   1   // 1 = show NRF packets on OLED
 
 extern LED_HandleTypeDef statusLED;
@@ -43,7 +43,7 @@ void General_Run(void)
 
 	#if MANUAL_TEST_MODE
 		// ===== MANUAL MOTOR TEST (REMOTE OFF) =====
-		int16_t angle = directionAngles[0];   // 2nd direction (45°)
+		int16_t angle = directionAngles[5];   // 2nd direction (45°)
 		uint8_t speed = 40;                   // 40%
 
 		Motor_RunDirection(angle, speed);

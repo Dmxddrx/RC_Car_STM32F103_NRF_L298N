@@ -1,6 +1,6 @@
-../Core/Src/motor.c:25:6:Motor_Init	16	static
-../Core/Src/motor.c:33:6:Motor_SetSpeed	24	static
-../Core/Src/motor.c:40:6:Motor_SetDirection	24	static
-../Core/Src/motor.c:61:6:Motor_Stop	16	static
-../Core/Src/motor.c:68:6:Motor_RunDirection	16	static
-../Core/Src/motor.c:131:6:Motor_MoveAll	24	static
+../Core/Src/motor.c:28:6:Motor_Init	16	static
+../Core/Src/motor.c:36:6:Motor_SetSpeed	24	static
+../Core/Src/motor.c:43:6:Motor_SetDirection	24	static
+../Core/Src/motor.c:64:6:Motor_Stop	16	static
+../Core/Src/motor.c:71:6:Motor_RunDirection	16	static
+../Core/Src/motor.c:134:6:Motor_MoveAll	24	static
