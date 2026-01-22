@@ -1,14 +1,10 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 // Header guard:
-// Prevents multiple inclusion of this file during compilation
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-// Allows this header to be included in C++ files
-// Prevents name mangling for C functions when using C++
 
 /* ======================= Includes ======================= */
 
@@ -36,15 +32,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 // Central error handler for unrecoverable faults
 void Error_Handler(void);
 
-/* USER CODE BEGIN EFP */
-// Exported Function Prototypes (user area)
-// (Currently unused, reserved for future expansion)
-/* USER CODE END EFP */
-
 /* ======================= GPIO Pin Definitions ======================= */
 // Motor driver direction control pins
-// These macros allow readable motor control code
-// Example: HAL_GPIO_WritePin(IN1_Left_GPIO_Port, IN1_Left_Pin, GPIO_PIN_SET);
 
 // -------- Left Motor Group --------
 #define IN1_Left_Pin GPIO_PIN_0
