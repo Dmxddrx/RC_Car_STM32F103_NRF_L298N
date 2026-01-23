@@ -1,15 +1,26 @@
-#include "general.h"
-#include "nrf24_rx.h"
-#include "motor.h"
-#include "led.h"
-#include "oled.h"
+// ======================= Includes =======================
+#include "general.h"	// Core application logic
+#include "nrf24_rx.h"	// - NRF24 receiver
+#include "motor.h"		// - Motor driver
+#include "led.h"		// - Status LED handling
+#include "oled.h"		// - OLED for debugging
 
-#define MANUAL_TEST_MODE   0   // set to 0 to restore NRF control
+// ======================= Build-Time Modes =======================
+
+// MANUAL_TEST_MODE:
+// 1 → Ignore NRF, force fixed motor movement (debug / hardware test)
+// 0 → Normal NRF-controlled operation
+#define MANUAL_TEST_MODE   0
+
+// OLED_DEBUG_MODE:
+// 1 → Show NRF status + packets on OLED
+// 0 → OLED disabled (saves time & I2C traffic)
 #define OLED_DEBUG_MODE   1   // 1 = show NRF packets on OLED
 
+// Status LED handle defined in main.c
 extern LED_HandleTypeDef statusLED;
 
-
+// ======================= OLED Debug Support =======================
 #if OLED_DEBUG_MODE
 	#include <stdio.h>
 
@@ -20,7 +31,7 @@ extern LED_HandleTypeDef statusLED;
 #endif
 
 
-// Direction mapping for STM32 motors
+	// ======================= Direction Mapping =======================
 static const int16_t directionAngles[9] = {
     -1, 	// index 0	- Stop
 	180, 	// index 1	- Backward
@@ -34,16 +45,26 @@ static const int16_t directionAngles[9] = {
 };
 
 
+// ======================= Main Control Loop =======================
+
+// - NRF packet reading
+// - Motor control logic
+// - LED status updates
+// - Optional OLED debugging
 void General_Run(void)
 {
 
+	// Get pointer to most recent NRF packet (non-blocking)
     ControlPacket *pkt = NRF24_GetLatest();
+
+    // Desired LED state for this cycle
     LED_State nextLedState = LED_STATE_OFF;
 
 
+    // ======================= Manual Motor Test =======================
 	#if MANUAL_TEST_MODE
-		// ===== MANUAL MOTOR TEST (REMOTE OFF) =====
-		int16_t angle = directionAngles[5];   // 2nd direction (45°)
+    	// Forces constant movement without NRF
+		int16_t angle = directionAngles[5];   // Direction
 		uint8_t speed = 40;                   // 40%
 
 		Motor_RunDirection(angle, speed);
@@ -55,8 +76,10 @@ void General_Run(void)
 	#endif
 
 
+	// ======================= OLED Debug Output =======================
 	#if OLED_DEBUG_MODE
 
+		// Read low-level NRF diagnostics
 		uint8_t st   = NRF24_ReadStatus();
 		uint8_t fifo = NRF24_ReadFIFO();
 		uint8_t ch   = NRF24_ReadChannel();
