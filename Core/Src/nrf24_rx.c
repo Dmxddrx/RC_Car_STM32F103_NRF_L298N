@@ -12,6 +12,15 @@ extern SPI_HandleTypeDef hspi1;
 
 #define FIFO_STATUS 0x17
 
+// ---------- STATUS register bits ----------
+#define RX_DR    6
+#define TX_DS    5
+#define MAX_RT   4
+
+// ---------- FIFO_STATUS register bits ----------
+#define RX_EMPTY 0
+#define RX_FULL  1
+
 static const uint8_t rxAddress[5] = {'C','A','R','0','1'};
 
 // Flag set by IRQ
@@ -82,22 +91,35 @@ void NRF24_Init(void){
 void NRF24_HandleIRQ(void) {
 
 	nrfIrqCount++;
-    // Read the payload directly
-    CSN_Low();
-    SPI_RW(NRF_R_RX_PAYLOAD);
-    uint8_t *p = (uint8_t*)&latestPkt;
-    for(int i=0; i<sizeof(ControlPacket); i++) p[i] = SPI_RW(NRF_NOP);
-    CSN_High();
 
-    // Clear RX_DR | TX_DS | MAX_RT
-    NRF_WriteReg(STATUS, 0x70);
+	uint8_t status = NRF_ReadReg(STATUS);
 
-    CSN_Low();
-    SPI_RW(NRF_FLUSH_RX);
-    CSN_High();
 
-    // Mark packet available
-    pktAvailable = true;
+	if(status & (1 << RX_DR))
+	{
+		while(!(NRF_ReadReg(FIFO_STATUS) & (1 << RX_EMPTY)))
+		{
+			CSN_Low();
+			SPI_RW(NRF_R_RX_PAYLOAD);
+			uint8_t *p = (uint8_t*)&latestPkt;
+			for(int i=0; i<sizeof(ControlPacket); i++) p[i] = SPI_RW(NRF_NOP);
+			CSN_High();
+
+			// Clear RX_DR | TX_DS | MAX_RT
+			/**
+			 * NRF_WriteReg(STATUS, 0x70);
+
+			CSN_Low();
+			SPI_RW(NRF_FLUSH_RX);
+			CSN_High();
+			 * */
+
+			// Mark packet available
+			pktAvailable = true;
+		}
+	}
+    // Clear only the IRQs that were set
+    NRF_WriteReg(STATUS, status);
 }
 
 // ---------- Fully event-driven API ----------
