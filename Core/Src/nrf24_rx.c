@@ -94,15 +94,18 @@ void NRF24_HandleIRQ(void) {
 
 	uint8_t status = NRF_ReadReg(STATUS);
 
-
+	// RX data ready
 	if(status & (1 << RX_DR))
 	{
+		// Drain RX FIFO completely
 		while(!(NRF_ReadReg(FIFO_STATUS) & (1 << RX_EMPTY)))
 		{
 			CSN_Low();
 			SPI_RW(NRF_R_RX_PAYLOAD);
+
 			uint8_t *p = (uint8_t*)&latestPkt;
 			for(int i=0; i<sizeof(ControlPacket); i++) p[i] = SPI_RW(NRF_NOP);
+
 			CSN_High();
 
 			// Clear RX_DR | TX_DS | MAX_RT
@@ -119,7 +122,10 @@ void NRF24_HandleIRQ(void) {
 		}
 	}
     // Clear only the IRQs that were set
-    NRF_WriteReg(STATUS, status);
+	// RX_DR | TX_DS | MAX_RT
+	// (1<<6) | (1<<5) | (1<<4) = 0x70
+
+	NRF_WriteReg(STATUS, (1 << RX_DR) | (1 << TX_DS) | (1 << MAX_RT));
 }
 
 // ---------- Fully event-driven API ----------
