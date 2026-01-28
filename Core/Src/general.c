@@ -99,7 +99,7 @@ void General_Run(void)
 		uint8_t fifo = NRF24_ReadFIFO();
 		uint8_t ch   = NRF24_ReadChannel();
 
-		OLED_ClearArea(0, 0, 128, 40);
+		OLED_ClearArea(0, 0, 128, 64);
 
 		// ---------- RF STATUS (top) ----------
 		snprintf(oledLine1, sizeof(oledLine1),
@@ -113,21 +113,19 @@ void General_Run(void)
 				 fifo,
 				 nrfIrqCount);
 
-		OLED_Print(0, 0, oledLine1);
-		OLED_Print(0,10, oledLine2);
+		OLED_Print(0,20, oledLine1);
+		OLED_Print(0,30, oledLine2);
 
 		char line3[20];
-		snprintf(line3,sizeof(line3),"CH:%d",ch);
-		OLED_Print(0,20,line3);
 
 		snprintf(line3, sizeof(line3), "CH:%d PKT:%d", ch, pktCount);
-		OLED_Print(0,20,line3);
+		OLED_Print(0,40,line3);
 
 
 		// ---------- PACKET INFO (bottom) ----------
 		if (pkt == NULL)
 		{
-			OLED_Print(0, 30, "PKT: NULL");
+			OLED_Print(0, 50, "PKT: NULL");
 		}
 		else
 		{
@@ -138,13 +136,13 @@ void General_Run(void)
 			{
 				snprintf(oledLine1, sizeof(oledLine1),
 						 "BAD D:%d S:%d", dir, spd);
-				OLED_Print(0, 30, oledLine1);
+				OLED_Print(0, 50, oledLine1);
 			}
 			else
 			{
 				snprintf(oledLine1, sizeof(oledLine1),
 						 "DIR:%d SPD:%d", dir, spd);
-				OLED_Print(0, 30, oledLine1);
+				OLED_Print(0, 50, oledLine1);
 
 				last_dir = dir;
 				last_spd = spd;
