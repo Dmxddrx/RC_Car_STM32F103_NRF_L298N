@@ -60,7 +60,7 @@ void General_Init(void)
     if(!nrfPresent)
     {
         Motor_MoveAll(MOTOR_STOP, 0);
-        statusLED.state = LED_STATE_BLINK_FAST; // hardware fault
+        statusLED.state = LED_STATE_ERROR_PULSE; // hardware fault
         LED_Update(&statusLED);
     }
 }
@@ -161,45 +161,62 @@ void General_Run(void)
 
 	#endif
 
-	    // ---------- NRF & Packet Handling ----------
-	    if(!nrfPresent)
-	    {
-	        Motor_MoveAll(MOTOR_STOP, 0);
-	        nextLedState = LED_STATE_ERROR_PULSE;
-	    }
-	    else
-	    {
-	        uint32_t now = HAL_GetTick();
+	// ---------- NRF & Packet Handling ----------
+	uint32_t now = HAL_GetTick();
 
-	        if(pkt != NULL)
-	        {
-	            lastAngle = directionAngles[pkt->direction];
-	            lastSpeed = (pkt->speed * 100) / 70;
-	            lastPacketTick = now;
-	        }
-	        if(pkt == NULL && now - lastPacketTick > PACKET_TIMEOUT_MS)
-	        {
-	            // Timeout reached → stop motors
-	            Motor_MoveAll(MOTOR_STOP, 0);
-	            nextLedState = LED_STATE_BLINK_SLOW;
-	        }
-	        else
-	        {
-	            if(lastAngle < 0)
-	            {
-	                Motor_MoveAll(MOTOR_STOP, 0);
-	                nextLedState = LED_STATE_OFF;
-	            }
-	            else
-	            {
-	                // Run last known command if still within timeout
-	                Motor_RunDirection(lastAngle, lastSpeed);
-	                nextLedState = LED_STATE_STEADY;
-	            }
-	        }
-	    }
+	if(!nrfPresent)
+	{
+		Motor_MoveAll(MOTOR_STOP, 0);
+		nextLedState = LED_STATE_ERROR_PULSE;
+	}
+    else if(pkt != NULL)
+    {
+        // Valid packet → update last command
+        lastAngle = directionAngles[pkt->direction];
+        lastSpeed = (pkt->speed * 100) / 70;
+        lastPacketTick = now;
 
-	    // ---------- Apply LED state ----------
-	    statusLED.state = nextLedState;
-	    LED_Update(&statusLED);
+        if(lastAngle < 0)
+        {
+            Motor_MoveAll(MOTOR_STOP, 0);
+            nextLedState = LED_STATE_OFF;
+        }
+        else
+        {
+            Motor_RunDirection(lastAngle, lastSpeed);
+            nextLedState = LED_STATE_STEADY;
+        }
+    }
+    else
+    {
+        // NULL packet → check timeout
+        if(now - lastPacketTick > PACKET_TIMEOUT_MS)
+        {
+            // Timeout reached → stop motors
+            Motor_MoveAll(MOTOR_STOP, 0);
+            nextLedState = LED_STATE_BLINK_SLOW;
+
+            // Soft NRF reset to recover
+            NRF24_Init();
+            lastPacketTick = now; // avoid repeated init
+        }
+        else
+        {
+            // Still within timeout → run last known command
+            if(lastAngle >= 0)
+            {
+                Motor_RunDirection(lastAngle, lastSpeed);
+                nextLedState = LED_STATE_STEADY;
+            }
+            else
+            {
+                Motor_MoveAll(MOTOR_STOP, 0);
+                nextLedState = LED_STATE_OFF;
+            }
+        }
+    }
+
+	// ---------- Apply LED state ----------
+	statusLED.state = nextLedState;
+	LED_Update(&statusLED);
 }
