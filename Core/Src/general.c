@@ -162,7 +162,8 @@ void General_Run(void)
 	#endif
 
 	// ---------- NRF & Packet Handling ----------
-	uint32_t now = HAL_GetTick();
+
+	uint32_t now = HAL_GetTick(); //returns the system tick in milliseconds
 
 	if(!nrfPresent)
 	{
@@ -189,30 +190,15 @@ void General_Run(void)
     }
     else
     {
-        // NULL packet → check timeout
+        // No packet → stop immediately
+        Motor_MoveAll(MOTOR_STOP, 0);
+        nextLedState = LED_STATE_BLINK_SLOW;
+
+        // Soft NRF reset only if timeout exceeded
         if(now - lastPacketTick > PACKET_TIMEOUT_MS)
         {
-            // Timeout reached → stop motors
-            Motor_MoveAll(MOTOR_STOP, 0);
-            nextLedState = LED_STATE_BLINK_SLOW;
-
-            // Soft NRF reset to recover
             NRF24_Init();
-            lastPacketTick = now; // avoid repeated init
-        }
-        else
-        {
-            // Still within timeout → run last known command
-            if(lastAngle >= 0)
-            {
-                Motor_RunDirection(lastAngle, lastSpeed);
-                nextLedState = LED_STATE_STEADY;
-            }
-            else
-            {
-                Motor_MoveAll(MOTOR_STOP, 0);
-                nextLedState = LED_STATE_OFF;
-            }
+            lastPacketTick = now;
         }
     }
 
