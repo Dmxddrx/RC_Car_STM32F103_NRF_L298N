@@ -97,6 +97,8 @@ void NRF24_HandleIRQ(void) {
 	// RX data ready
 	if(status & (1 << RX_DR))
 	{
+	    // Clear RX_DR immediately
+	    NRF_WriteReg(STATUS, (1 << RX_DR));
 
 		// Drain RX FIFO completely
 		while(!(NRF_ReadReg(FIFO_STATUS) & (1 << RX_EMPTY)))
