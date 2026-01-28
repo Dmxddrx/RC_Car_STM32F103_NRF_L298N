@@ -2910,10 +2910,10 @@ void NRF24_HandleIRQ(void) {
  800136c:	2b00      	cmp	r3, #0
  800136e:	d0da      	beq.n	8001326 <NRF24_HandleIRQ+0x26>
 	}
+
     // Clear only the IRQs that were set
 	// RX_DR | TX_DS | MAX_RT
 	// (1<<6) | (1<<5) | (1<<4) = 0x70
-
 	NRF_WriteReg(STATUS, (1 << RX_DR) | (1 << TX_DS) | (1 << MAX_RT));
  8001370:	2170      	movs	r1, #112	@ 0x70
  8001372:	2007      	movs	r0, #7

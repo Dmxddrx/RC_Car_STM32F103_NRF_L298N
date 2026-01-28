@@ -121,10 +121,10 @@ void NRF24_HandleIRQ(void) {
 			pktAvailable = true;
 		}
 	}
+
     // Clear only the IRQs that were set
 	// RX_DR | TX_DS | MAX_RT
 	// (1<<6) | (1<<5) | (1<<4) = 0x70
-
 	NRF_WriteReg(STATUS, (1 << RX_DR) | (1 << TX_DS) | (1 << MAX_RT));
 }
 
