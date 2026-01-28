@@ -12,6 +12,13 @@
 #define LED_ERROR_BLINK_INTERVAL   120
 #define LED_ERROR_PAUSE           1500
 
+#define TRIPLE_BLINK_INTERVAL 120
+#define TRIPLE_BLINK_PAUSE    800
+#define SOS_DOT               100
+#define SOS_DASH              300
+#define SOS_GAP               200
+
+
 void LED_Init(LED_HandleTypeDef *led, GPIO_TypeDef *port, uint16_t pin)
 {
     led->port = port;
@@ -109,5 +116,22 @@ void LED_Update(LED_HandleTypeDef *led)
 				}
 			}
 			break;
+
+        case LED_STATE_TRIPLE_BLINK:
+            if(now - led->lastToggle >= TRIPLE_BLINK_INTERVAL)
+            {
+                led->lastToggle = now;
+                led->outputState ^= 1;
+                HAL_GPIO_WritePin(led->port, led->pin,
+                    led->outputState ? GPIO_PIN_SET : GPIO_PIN_RESET);
+
+                if(++blinkCount >= 6){ // ON-OFF-ON-OFF-ON-OFF = 3 blinks
+                    blinkCount = 0;
+                    led->lastToggle = now + TRIPLE_BLINK_PAUSE;
+                    HAL_GPIO_WritePin(led->port, led->pin, GPIO_PIN_RESET);
+                }
+            }
+            break;
+
     }
 }

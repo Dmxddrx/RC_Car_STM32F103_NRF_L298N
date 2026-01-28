@@ -12,7 +12,8 @@ typedef enum {
 
     LED_STATE_DOUBLE_BLINK,
     LED_STATE_HEARTBEAT,
-    LED_STATE_ERROR_PULSE
+    LED_STATE_ERROR_PULSE,
+	LED_STATE_TRIPLE_BLINK
 } LED_State;
 
 typedef struct {

@@ -46,7 +46,13 @@ static const int16_t directionAngles[9] = {
 
 static bool nrfPresent = false;
 
+// ======================= Packet Timeout =======================
+static uint32_t lastPacketTick = 0;
+static int16_t lastAngle = 0;
+static uint8_t lastSpeed = 0;
+#define PACKET_TIMEOUT_MS 200  // 200 ms timeout
 
+// ======================= Initialization =======================
 void General_Init(void)
 {
     nrfPresent = NRF24_IsConnected();
@@ -117,18 +123,12 @@ void General_Run(void)
 		OLED_Print(0,30, oledLine2);
 
 		char line3[20];
-
 		snprintf(line3, sizeof(line3), "CH:%d", ch);
 		OLED_Print(0,40,line3);
 
 		OLED_Print(56, 40, (pkt != NULL) ? "PKT:1" : "PKT:0");
-
-	    //nrfPresent = NRF24_IsConnected();
 	    OLED_Print(0, 0, NRF24_IsConnected() ? "NRF:1" : "NRF:0");
-
 	    OLED_Print(58, 0, Motor_IsReady() ? "MOTOR:1" : "MOTOR:0");
-
-
 
 		// ---------- PACKET INFO (bottom) ----------
 		if (pkt == NULL)
@@ -161,30 +161,45 @@ void General_Run(void)
 
 	#endif
 
+	    // ---------- NRF & Packet Handling ----------
+	    if(!nrfPresent)
+	    {
+	        Motor_MoveAll(MOTOR_STOP, 0);
+	        nextLedState = LED_STATE_ERROR_PULSE;
+	    }
+	    else
+	    {
+	        uint32_t now = HAL_GetTick();
 
+	        if(pkt != NULL)
+	        {
+	            lastAngle = directionAngles[pkt->direction];
+	            lastSpeed = (pkt->speed * 100) / 70;
+	            lastPacketTick = now;
+	        }
+	        if(pkt == NULL && now - lastPacketTick > PACKET_TIMEOUT_MS)
+	        {
+	            // Timeout reached → stop motors
+	            Motor_MoveAll(MOTOR_STOP, 0);
+	            nextLedState = LED_STATE_BLINK_SLOW;
+	        }
+	        else
+	        {
+	            if(lastAngle < 0)
+	            {
+	                Motor_MoveAll(MOTOR_STOP, 0);
+	                nextLedState = LED_STATE_OFF;
+	            }
+	            else
+	            {
+	                // Run last known command if still within timeout
+	                Motor_RunDirection(lastAngle, lastSpeed);
+	                nextLedState = LED_STATE_STEADY;
+	            }
+	        }
+	    }
 
-    if(!nrfPresent){
-        Motor_MoveAll(MOTOR_STOP, 0);
-        nextLedState = LED_STATE_BLINK_FAST;
-    }
-    else if(pkt == NULL){
-        Motor_MoveAll(MOTOR_STOP, 0);
-        nextLedState = LED_STATE_HEARTBEAT;
-    }
-    else{
-        int16_t angle = directionAngles[pkt->direction];
-        if(angle < 0){
-            Motor_MoveAll(MOTOR_STOP, 0);
-            nextLedState = LED_STATE_OFF;
-        } else {
-            uint8_t speed = (pkt->speed * 100) / 70;
-            Motor_RunDirection(angle, speed);
-            nextLedState = LED_STATE_STEADY;
-        }
-    }
-
-    // ---------- Apply LED state once ----------
-    statusLED.state = nextLedState;
-    LED_Update(&statusLED);
+	    // ---------- Apply LED state ----------
+	    statusLED.state = nextLedState;
+	    LED_Update(&statusLED);
 }
-

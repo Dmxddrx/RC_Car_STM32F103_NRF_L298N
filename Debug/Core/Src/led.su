@@ -1,2 +1,2 @@
-../Core/Src/led.c:15:6:LED_Init	24	static
-../Core/Src/led.c:26:6:LED_Update	24	static
+../Core/Src/led.c:22:6:LED_Init	24	static
+../Core/Src/led.c:33:6:LED_Update	24	static
