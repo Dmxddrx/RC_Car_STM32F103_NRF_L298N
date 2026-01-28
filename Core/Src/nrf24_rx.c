@@ -100,6 +100,8 @@ void NRF24_HandleIRQ(void) {
 	    // Clear RX_DR immediately
 	    NRF_WriteReg(STATUS, (1 << RX_DR));
 
+	    CE_Low();
+
 		// Drain RX FIFO completely
 		while(!(NRF_ReadReg(FIFO_STATUS) & (1 << RX_EMPTY)))
 		{
@@ -114,6 +116,7 @@ void NRF24_HandleIRQ(void) {
 			// Mark packet available
 			pktAvailable = true;
 		}
+		CE_High();
 	}
 
     // Clear only the IRQs that were set
