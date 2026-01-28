@@ -120,6 +120,10 @@ void General_Run(void)
 		snprintf(line3,sizeof(line3),"CH:%d",ch);
 		OLED_Print(0,20,line3);
 
+		snprintf(line3, sizeof(line3), "CH:%d PKT:%d", ch, pktCount);
+		OLED_Print(0,20,line3);
+
+
 		// ---------- PACKET INFO (bottom) ----------
 		if (pkt == NULL)
 		{
