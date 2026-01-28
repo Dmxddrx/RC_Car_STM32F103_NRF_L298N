@@ -8,7 +8,7 @@ extern SPI_HandleTypeDef hspi1;
 #define NRF_CSN_PORT  GPIOA
 #define NRF_CSN_PIN   GPIO_PIN_3
 #define NRF_IRQ_PORT  GPIOB
-#define NRF_IRQ_PIN   GPIO_PIN_5  // IRQ pin now on PA0
+#define NRF_IRQ_PIN   GPIO_PIN_5  // IRQ pin now on PB5
 
 #define FIFO_STATUS 0x17
 
@@ -97,6 +97,7 @@ void NRF24_HandleIRQ(void) {
 	// RX data ready
 	if(status & (1 << RX_DR))
 	{
+
 		// Drain RX FIFO completely
 		while(!(NRF_ReadReg(FIFO_STATUS) & (1 << RX_EMPTY)))
 		{

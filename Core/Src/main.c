@@ -56,6 +56,7 @@ int main(void)
 
   Motor_Init();			// Initialize motor driver (PWM + direction pins)
   NRF24_Init();			// Initialize NRF24L01 receiver
+  General_Init();
   OLED_Init(&hi2c1);	// Initialize OLED with I2C handle
 
   // Initialize status LED on PC13

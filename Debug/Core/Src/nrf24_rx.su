@@ -7,8 +7,8 @@
 ../Core/Src/nrf24_rx.c:49:16:NRF_ReadReg	24	static
 ../Core/Src/nrf24_rx.c:62:6:NRF24_Init	16	static
 ../Core/Src/nrf24_rx.c:91:6:NRF24_HandleIRQ	32	static
-../Core/Src/nrf24_rx.c:134:16:NRF24_GetLatest	4	static
-../Core/Src/nrf24_rx.c:142:6:NRF24_IsConnected	8	static
-../Core/Src/nrf24_rx.c:147:9:NRF24_ReadStatus	16	static
-../Core/Src/nrf24_rx.c:155:9:NRF24_ReadFIFO	8	static
-../Core/Src/nrf24_rx.c:160:9:NRF24_ReadChannel	8	static
+../Core/Src/nrf24_rx.c:135:16:NRF24_GetLatest	4	static
+../Core/Src/nrf24_rx.c:143:6:NRF24_IsConnected	8	static
+../Core/Src/nrf24_rx.c:148:9:NRF24_ReadStatus	16	static
+../Core/Src/nrf24_rx.c:156:9:NRF24_ReadFIFO	8	static
+../Core/Src/nrf24_rx.c:161:9:NRF24_ReadChannel	8	static
