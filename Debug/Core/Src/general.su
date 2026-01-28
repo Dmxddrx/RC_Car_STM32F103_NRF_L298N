@@ -1,1 +1,2 @@
-../Core/Src/general.c:54:6:General_Run	56	static
+../Core/Src/general.c:50:6:General_Init	8	static
+../Core/Src/general.c:69:6:General_Run	56	static

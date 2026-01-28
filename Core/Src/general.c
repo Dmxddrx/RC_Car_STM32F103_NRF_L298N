@@ -44,6 +44,21 @@ static const int16_t directionAngles[9] = {
 	135		// index 8	- Backward - Right
 };
 
+static bool nrfPresent = false;
+
+
+void General_Init(void)
+{
+    nrfPresent = NRF24_IsConnected();
+
+    if(!nrfPresent)
+    {
+        Motor_MoveAll(MOTOR_STOP, 0);
+        statusLED.state = LED_STATE_BLINK_FAST; // hardware fault
+        LED_Update(&statusLED);
+    }
+}
+
 
 // ======================= Main Control Loop =======================
 
@@ -138,9 +153,9 @@ void General_Run(void)
 
 
 
-    if(!NRF24_IsConnected()){
+    if(!nrfPresent){
         Motor_MoveAll(MOTOR_STOP, 0);
-        nextLedState = LED_STATE_BLINK_SLOW;
+        nextLedState = LED_STATE_BLINK_FAST;
     }
     else if(pkt == NULL){
         Motor_MoveAll(MOTOR_STOP, 0);

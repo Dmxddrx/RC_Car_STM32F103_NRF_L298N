@@ -5,5 +5,6 @@
 
 // Main robot control
 void General_Run(void);
+void General_Init(void);
 
 #endif /* __GENERAL_H */
