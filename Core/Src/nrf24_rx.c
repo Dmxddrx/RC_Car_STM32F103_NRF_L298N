@@ -23,8 +23,9 @@ extern SPI_HandleTypeDef hspi1;
 
 static const uint8_t rxAddress[5] = {'C','A','R','0','1'};
 
-// Flag set by IRQ
-volatile bool nrfPacketAvailable = false;
+
+volatile uint8_t pktCount = 0;
+
 volatile uint32_t nrfIrqCount = 0;
 
 
@@ -56,7 +57,7 @@ static uint8_t NRF_ReadReg(uint8_t reg){
 }
 
 // ---------- Latest received packet ----------
-static volatile bool pktAvailable = false;
+
 static ControlPacket latestPkt;
 
 void NRF24_Init(void){
@@ -114,7 +115,7 @@ void NRF24_HandleIRQ(void) {
 			CSN_High();
 
 			// Mark packet available
-			pktAvailable = true;
+			if(pktCount < 255) pktCount++;
 		}
 		CE_High();
 	}
@@ -122,15 +123,17 @@ void NRF24_HandleIRQ(void) {
     // Clear only the IRQs that were set
 	// RX_DR | TX_DS | MAX_RT
 	// (1<<6) | (1<<5) | (1<<4) = 0x70
-	NRF_WriteReg(STATUS, (1 << RX_DR) | (1 << TX_DS) | (1 << MAX_RT));
+	NRF_WriteReg(STATUS, (1 << TX_DS) | (1 << MAX_RT));
 }
 
 // ---------- Fully event-driven API ----------
 
-// Returns pointer to the latest packet if available, NULL otherwise
-ControlPacket* NRF24_GetLatest(void){
-    if(pktAvailable){
-        pktAvailable = false;
+// counter-based
+ControlPacket* NRF24_GetLatest(void)
+{
+    if(pktCount > 0)
+    {
+        pktCount--;
         return (ControlPacket*)&latestPkt;
     }
     return NULL;
