@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00018f04  00000000  00000000  0001bf17  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00014609  00000000  00000000  00034e1b  2**0
+ 17 .debug_line   00014607  00000000  00000000  00034e1b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0008d1e1  00000000  00000000  00049424  2**0
+ 18 .debug_str    0008d1e1  00000000  00000000  00049422  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  000d6605  2**0
+ 19 .comment      00000043  00000000  00000000  000d6603  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00004a04  00000000  00000000  000d6648  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -2944,9 +2944,6 @@ void NRF24_HandleIRQ(void) {
 
 			CSN_High();
  80013a2:	f7ff ff15 	bl	80011d0 <CSN_High>
-			SPI_RW(NRF_FLUSH_RX);
-			CSN_High();
-			 * */
 
 			// Mark packet available
 			pktAvailable = true;

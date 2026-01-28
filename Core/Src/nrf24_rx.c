@@ -111,15 +111,6 @@ void NRF24_HandleIRQ(void) {
 
 			CSN_High();
 
-			// Clear RX_DR | TX_DS | MAX_RT
-			/**
-			 * NRF_WriteReg(STATUS, 0x70);
-
-			CSN_Low();
-			SPI_RW(NRF_FLUSH_RX);
-			CSN_High();
-			 * */
-
 			// Mark packet available
 			pktAvailable = true;
 		}
