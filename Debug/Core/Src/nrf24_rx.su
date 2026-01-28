@@ -1,10 +1,10 @@
-../Core/Src/nrf24_rx.c:32:13:CSN_Low	8	static
-../Core/Src/nrf24_rx.c:33:13:CSN_High	8	static
-../Core/Src/nrf24_rx.c:34:13:CE_Low	8	static
-../Core/Src/nrf24_rx.c:35:13:CE_High	8	static
-../Core/Src/nrf24_rx.c:37:16:SPI_RW	32	static
-../Core/Src/nrf24_rx.c:43:13:NRF_WriteReg	16	static
-../Core/Src/nrf24_rx.c:50:16:NRF_ReadReg	24	static
+../Core/Src/nrf24_rx.c:31:13:CSN_Low	8	static
+../Core/Src/nrf24_rx.c:32:13:CSN_High	8	static
+../Core/Src/nrf24_rx.c:33:13:CE_Low	8	static
+../Core/Src/nrf24_rx.c:34:13:CE_High	8	static
+../Core/Src/nrf24_rx.c:36:16:SPI_RW	32	static
+../Core/Src/nrf24_rx.c:42:13:NRF_WriteReg	16	static
+../Core/Src/nrf24_rx.c:49:16:NRF_ReadReg	24	static
 ../Core/Src/nrf24_rx.c:63:6:NRF24_Init	16	static
 ../Core/Src/nrf24_rx.c:92:6:NRF24_HandleIRQ	32	static
 ../Core/Src/nrf24_rx.c:132:16:NRF24_GetLatest	4	static

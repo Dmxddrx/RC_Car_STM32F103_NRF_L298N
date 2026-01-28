@@ -24,7 +24,6 @@ extern SPI_HandleTypeDef hspi1;
 static const uint8_t rxAddress[5] = {'C','A','R','0','1'};
 
 
-volatile uint8_t pktCount = 0;
 
 volatile uint32_t nrfIrqCount = 0;
 
@@ -59,6 +58,7 @@ static uint8_t NRF_ReadReg(uint8_t reg){
 // ---------- Latest received packet ----------
 
 static ControlPacket latestPkt;
+static volatile bool packetAvailable = false;
 
 void NRF24_Init(void){
     CE_Low();
@@ -110,13 +110,13 @@ void NRF24_HandleIRQ(void) {
 			SPI_RW(NRF_R_RX_PAYLOAD);
 
 			uint8_t *p = (uint8_t*)&latestPkt;
-			for(int i=0; i<sizeof(ControlPacket); i++) p[i] = SPI_RW(NRF_NOP);
+			for(int i=0; i<sizeof(ControlPacket); i++)
+				p[i] = SPI_RW(NRF_NOP);
 
 			CSN_High();
 
-			// Mark packet available
-			if(pktCount < 255) pktCount++;
 		}
+		packetAvailable = true;
 		CE_High();
 	}
 
@@ -131,10 +131,10 @@ void NRF24_HandleIRQ(void) {
 // counter-based
 ControlPacket* NRF24_GetLatest(void)
 {
-    if(pktCount > 0)
+    if(packetAvailable)
     {
-        pktCount--;
-        return (ControlPacket*)&latestPkt;
+        packetAvailable = false;
+        return &latestPkt;
     }
     return NULL;
 }

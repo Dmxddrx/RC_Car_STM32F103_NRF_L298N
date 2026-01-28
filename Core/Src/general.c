@@ -121,8 +121,7 @@ void General_Run(void)
 		snprintf(line3, sizeof(line3), "CH:%d", ch);
 		OLED_Print(0,40,line3);
 
-		snprintf(line3, sizeof(line3), "PKT:%d", pktCount);
-		OLED_Print(56,40,line3);
+		OLED_Print(56, 40, (pkt != NULL) ? "PKT:1" : "PKT:0");
 
 	    //nrfPresent = NRF24_IsConnected();
 	    OLED_Print(0, 0, NRF24_IsConnected() ? "NRF:1" : "NRF:0");
