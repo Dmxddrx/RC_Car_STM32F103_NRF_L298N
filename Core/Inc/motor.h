@@ -16,6 +16,7 @@ typedef enum {
     MOTOR_BACKWARD
 } Motor_Direction;
 
+uint8_t Motor_IsReady(void);
 void Motor_Init(void);
 void Motor_SetSpeed(Motor_TypeDef motor,uint8_t speed);
 void Motor_SetDirection(Motor_TypeDef motor,Motor_Direction dir);

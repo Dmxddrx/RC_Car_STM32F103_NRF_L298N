@@ -118,8 +118,17 @@ void General_Run(void)
 
 		char line3[20];
 
-		snprintf(line3, sizeof(line3), "CH:%d PKT:%d", ch, pktCount);
+		snprintf(line3, sizeof(line3), "CH:%d", ch);
 		OLED_Print(0,40,line3);
+
+		snprintf(line3, sizeof(line3), "PKT:%d", pktCount);
+		OLED_Print(56,40,line3);
+
+	    //nrfPresent = NRF24_IsConnected();
+	    OLED_Print(0, 0, NRF24_IsConnected() ? "NRF:1" : "NRF:0");
+
+	    OLED_Print(58, 0, Motor_IsReady() ? "MOTOR:1" : "MOTOR:0");
+
 
 
 		// ---------- PACKET INFO (bottom) ----------

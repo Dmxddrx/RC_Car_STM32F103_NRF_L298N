@@ -25,12 +25,15 @@ Motor_PinDef motors[4] = {
 
 static const int8_t motorDirSign[4] = {-1, -1, 1, 1};
 
+static uint8_t motorReady = 0;
+
 void Motor_Init(void)
 {
     for (int i=0;i<4;i++) {
         HAL_TIM_PWM_Start(motors[i].htim, motors[i].Channel);
         Motor_Stop((Motor_TypeDef)i);
     }
+    motorReady = 1;
 }
 
 void Motor_SetSpeed(Motor_TypeDef motor, uint8_t speed)
@@ -138,3 +141,9 @@ void Motor_MoveAll(Motor_Direction dir,uint8_t speed)
         Motor_SetSpeed((Motor_TypeDef)i,speed);
     }
 }
+
+uint8_t Motor_IsReady(void)
+{
+    return motorReady;
+}
+
