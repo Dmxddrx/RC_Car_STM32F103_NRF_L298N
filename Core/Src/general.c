@@ -50,7 +50,7 @@ static bool nrfPresent = false;
 static uint32_t lastPacketTick = 0;
 static int16_t lastAngle = 0;
 static uint8_t lastSpeed = 0;
-#define PACKET_TIMEOUT_MS 200  // 200 ms timeout
+#define PACKET_TIMEOUT_MS 50  // 200 ms timeout
 
 // ======================= Initialization =======================
 void General_Init(void)
