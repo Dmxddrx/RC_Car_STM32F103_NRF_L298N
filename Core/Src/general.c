@@ -140,7 +140,7 @@ void General_Run(void)
 			uint8_t dir = pkt->direction;
 			uint8_t spd = pkt->speed;
 
-			if (dir > 8 || spd > 70)
+			if (dir > 8 || spd > 100)
 			{
 				snprintf(oledLine1, sizeof(oledLine1),
 						 "BAD D:%d S:%d", dir, spd);
@@ -174,7 +174,7 @@ void General_Run(void)
     {
         // Valid packet → update last command
         lastAngle = directionAngles[pkt->direction];
-        lastSpeed = (pkt->speed * 100) / 70;
+        lastSpeed = pkt->speed;
         lastPacketTick = now;
 
         if(lastAngle < 0)
